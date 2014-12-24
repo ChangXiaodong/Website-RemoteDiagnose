@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>        
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />    
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
+	<link rel="stylesheet" type="text/css" href="../page/css/default.css" />
+	<link rel="stylesheet" type="text/css" href="../page/css/component.css" />       
+    <title>心率</title>      
+    <script type='text/javascript' src='js/jquery-1.9.1.min.js'></script>
+    <script type='text/javascript' src='js/jquery.flot.js'></script>    
+    
+
+</head>
+<body>
+		<div class="container">	
+			<div class="main clearfix">
+				<nav id="menu" class="nav">					
+					<ul>
+						<li>
+							<a href="../index.html">
+								<span class="icon">
+									<i aria-hidden="true" class="icon-home"></i>
+								</span>
+								<span>主页</span>
+							</a>
+						</li>
+						<li>
+							<a href="../abstract.html">
+								<span class="icon">
+									<i aria-hidden="true" class="icon-blog"></i>
+								</span>
+								<span>产品简介</span>
+							</a>
+						</li>
+						<li>
+							<a href="../ichart/onehour.php">
+								<span class="icon">
+									<i aria-hidden="true" class="icon-portfolio"></i>
+								</span>
+								<span>数据查看</span>
+							</a>
+						</li>
+						<li>
+							<a href="diagnose.html">
+								<span class="icon"> 
+									<i aria-hidden="true" class="icon-services"></i>
+								</span>
+								<span>诊断信息</span>
+							</a>
+						</li>
+						
+						<li>
+							<a href="../about.html">
+								<span class="icon">
+									<i aria-hidden="true" class="icon-team"></i>
+								</span>
+								<span>关于我们</span>
+							</a>
+						</li>
+					</ul>
+				</nav>
+			</div>
+		</div><!-- /container -->             
+<div class="head">
+	<h2  align="center">动态曲线</h2>
+</div>
+<div class="data">
+<div id="chart-4" style="height: 300px;width:70%;left:200px;"></div>
+</div>
+</body>
+</html>
+
+<script type="text/javascript">
+var xmlHttp;
+var buffer = new Array();
+var res = new Array();
+var count = 0;
+var sec = 0;
+var aa = 0;
+var set_flag = 0;
+function A_xmlhttprequest() {
+	if(window.ActiveXObject) {
+		xmlHttp = new ActiveXObject('Microsoft.XMLHTTP');
+	} else if(window.XMLHttpRequest) {
+		xmlHttp = new XMLHttpRequest();
+	}
+}
+function select(op) {
+	A_xmlhttprequest();
+	xmlHttp.open("GET","read.php?id="+op,true);
+	xmlHttp.onreadystatechange = receive_op;
+	xmlHttp.send(null);
+	return false;
+}
+function receive_op() {
+	var reveive =  xmlHttp.responseText;
+	var i=0;
+	buffer = reveive.split(";");
+	return 1;
+}
+
+$(window).load(function(){
+
+	
+	var ForReading=1; 
+    if($("#chart-4").length > 0){
+        var data = [], totalPoints = 100;	//数据总数
+        var updateInterval = 50;   //扫面时间  单位ms
+        var plot = $.plot($("#chart-4"), [ getData() ], {
+            series: { shadowSize: 0 }, //线阴影
+            yaxis: { min: 0, max: 100 },
+            xaxis: { show: true }  //背景网格
+        });
+		buffer.length = 0;
+		
+        update(); 
+    }
+    function update() {
+
+        plot.setData([ getData() ]);
+        // since the axes don't change, we don't need to call plot.setupGrid()
+        plot.draw();
+        setTimeout(update, updateInterval);
+    }
+    function getData() {
+		var y;
+		
+        if (data.length > 0)
+            data = data.slice(1);
+        // do a random walk
+		if(set_flag==1){
+					y =  buffer[count++];
+					//document.write(y+"\n");
+					if (y < 0)
+						y = 0;
+					if (y > 100)
+						y = 100;
+					data.push(y);
+			}
+		else{
+				while (data.length < totalPoints) {
+				y =  50;
+				data.push(y);
+				set_flag = 1;
+			}
+			
+		}
+		
+		//document.getElementById('draw').innerHTML = sec;
+		//document.getElementById('data').innerHTML = buffer.length;
+		if(count==buffer.length){
+			count = 0;
+			select(++sec);
+		}
+        
+		
+        // zip the generated y values with the x values
+		res.length = 0;
+        for (var i = 0; i < data.length; ++i)
+            res.push([i, data[i]])
+        return res;
+    }
+	//指定位置显示
+    function showTooltip(x, y, contents) {
+        $('<div class="ct">' + contents + '</div>').css( {
+            position: 'absolute',
+            display: 'none',
+            top: y,
+            left: x + 10,
+            border: '1px solid #000',
+            padding: '3px',
+            opacity: '0.7',
+            'background-color': '#000',            
+            color: '#fff'            
+        }).appendTo("body").fadeIn(200);
+    }    
+
+    var previousPoint = null;
+    
+});
+
+</script>

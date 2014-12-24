@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+		<title>pages</title>
+		<link rel="stylesheet" type="text/css" href="page/css/default.css" />
+		<link rel="stylesheet" type="text/css" href="page/css/component.css" />
+		<script src="page/js/modernizr.custom.js"></script>
+	</head>
+	<body>
+		<div class="container">	
+			<div class="main clearfix">
+				<nav id="menu" class="nav">					
+					<ul>
+					<font face=黑体>
+						<li>
+							<a href="index.html">
+								<span class="icon">
+									<i aria-hidden="true" class="icon-home"></i>
+								</span>
+								<span>主页</span>
+							</a>
+						</li>
+						<li>
+							<a href="abstract.html">
+								<span class="icon">
+									<i aria-hidden="true" class="icon-blog"></i>
+								</span>
+								<span>产品简介</span>
+							</a>
+						</li>
+						<li>
+							<a href="data.html">
+								<span class="icon">
+									<i aria-hidden="true" class="icon-portfolio"></i>
+								</span>
+								<span>数据查看</span>
+							</a>
+						</li>
+						<li>
+							<a href="diagnose.html">
+								<span class="icon"> 
+									<i aria-hidden="true" class="icon-services"></i>
+								</span>
+								<span>诊断信息</span>
+							</a>
+						</li>
+						
+						<li>
+							<a href="about.html">
+								<span class="icon">
+									<i aria-hidden="true" class="icon-team"></i>
+								</span>
+								<span>关于我们</span>
+							</a>
+						</li>
+					</font>
+					</ul>
+				</nav>
+			</div>
+		</div><!-- /container -->
+		<script>
+			//  The function to change the class
+			var changeClass = function (r,className1,className2) {
+				var regex = new RegExp("(?:^|\\s+)" + className1 + "(?:\\s+|$)");
+				if( regex.test(r.className) ) {
+					r.className = r.className.replace(regex,' '+className2+' ');
+			    }
+			    else{
+					r.className = r.className.replace(new RegExp("(?:^|\\s+)" + className2 + "(?:\\s+|$)"),' '+className1+' ');
+			    }
+			    return r.className;
+			};	
+
+			//  Creating our button in JS for smaller screens
+			var menuElements = document.getElementById('menu');
+			menuElements.insertAdjacentHTML('afterBegin','<button type="button" id="menutoggle" class="navtoogle" aria-hidden="true"><i aria-hidden="true" class="icon-menu"> </i> Menu</button>');
+
+			//  Toggle the class on click to show / hide the menu
+			document.getElementById('menutoggle').onclick = function() {
+				changeClass(this, 'navtoogle active', 'navtoogle');
+			}
+		</script>
+	</body>
+</html>
